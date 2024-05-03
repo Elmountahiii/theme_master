@@ -19,6 +19,20 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
   const switchTheme = () => {
     switchIsDark(!isDark);
   };
+  const reactToOsTheme = (e: MediaQueryListEvent) => {
+    switchIsDark(e.matches);
+  };
+
+  useEffect(() => {
+    const darkModeMediaQuery = window.matchMedia(
+      "(prefers-color-scheme: dark)"
+    );
+    switchIsDark(darkModeMediaQuery.matches);
+    darkModeMediaQuery.addEventListener("change", reactToOsTheme);
+    return () => {
+      darkModeMediaQuery.removeEventListener("change", reactToOsTheme);
+    };
+  }, []);
 
   useEffect(() => {
     if (isDark) {
